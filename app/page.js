@@ -22,8 +22,9 @@ export default function Home() {
     height="100vh"
     display={'flex'}
     justifyContent={'center'}
+    flexDirection={'column'}
     alignItems={'center'}>
-      <Box width="800px" height="100px" display={'flex'} justifyContent={'center'} alignItems={'center'}> Cindy's Pantry </Box>
+      <Box width="800px" height="100px" bgcolor={"#E5CCFF"} display={'flex'} justifyContent={'center'} alignItems={'center'}> Cindy's Pantry </Box>
       <Stack width="800px" height="300px" spacing={2} overflow={'auto'}>
         {items.map((i) => (
           <Box
