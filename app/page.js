@@ -1,5 +1,4 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import * as React from 'react';
 import Box from '@mui/material/Box';
@@ -8,7 +7,6 @@ import {firestore} from "../firebase";
 import { doc, setDoc, getDoc, getDocs, collection, getFirestore, query, onSnapshot, deleteDoc} from 'firebase/firestore';
 import { Button, Modal, TextField, Typography } from '@mui/material';
 
-let itemsArr = [];
 const style = {
   position: 'absolute',
   top: '50%',
@@ -55,7 +53,6 @@ export default function Home() {
       await setDoc(docRef, { name: item, quantity: 1 })
     }
     await getItems()
-    // router.refresh()
   }
   
   const removeItem = async (item) => {
@@ -127,7 +124,7 @@ export default function Home() {
           alignItems={'center'}
         >
           <Typography variant={'h2'} color={'#333'} textAlign={'center'}>
-            Inventory Items
+            Cindy's Pantry
           </Typography>
         </Box>
         <Stack width="800px" height="300px" spacing={2} overflow={'auto'}>
