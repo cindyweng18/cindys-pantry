@@ -133,7 +133,7 @@ export default function Home() {
           alignItems={'center'}
           borderRadius={2}
         >
-          <Typography variant={'h4'} color={'#333'} textAlign={'center'}>
+          <Typography variant={'h4'} textAlign={'center'}>
             Inventory Items
           </Typography>
         </Box>
@@ -147,14 +147,14 @@ export default function Home() {
               display={'flex'}
               justifyContent={'space-between'}
               alignItems={'center'}
-              bgcolor={'#f0f0f0'}
+              bgcolor={'#F8EDED'}
               paddingX={5}
               borderRadius={2}
             >
-              <Typography variant={'h5'} color={'#333'} textAlign={'center'}>
+              <Typography variant={'h5'} color={'#173B45'} textAlign={'center'}>
                 {name.charAt(0).toUpperCase() + name.slice(1)}
               </Typography>
-              <Typography variant={'h5'} color={'#333'} textAlign={'center'}>
+              <Typography variant={'h5'} color={'#173B45'} textAlign={'center'}>
                 Quantity: {quantity}
               </Typography>
               <Button variant="contained" onClick={() => removeItem(name)}>
