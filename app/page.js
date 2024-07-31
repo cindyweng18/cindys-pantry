@@ -115,10 +115,14 @@ export default function Home() {
           </Stack>
         </Box>
       </Modal>
-      <Button variant="contained" onClick={handleOpen}>
-        Add New Item/Update Item
-      </Button>
-      <Search> </Search>
+      <Stack
+        spacing={2} direction="row"
+      >
+        <Button variant="contained" onClick={handleOpen}>
+          Add New Item/Update Item
+        </Button>
+        <Search> </Search>
+      </Stack>
       <Box>
         <Box
           width="800px"
