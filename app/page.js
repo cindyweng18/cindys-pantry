@@ -5,7 +5,8 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import {firestore} from "../firebase";
 import { doc, setDoc, getDoc, getDocs, collection, getFirestore, query, onSnapshot, deleteDoc} from 'firebase/firestore';
-import { Button, Modal, TextField, Typography } from '@mui/material';
+import { Button, Divider, Modal, TextField, Typography } from '@mui/material';
+import Nav from './navbar';
 
 const style = {
   position: 'absolute',
@@ -70,9 +71,11 @@ export default function Home() {
   }
   
   return (
+    <>
+    <Nav> </Nav>
     <Box
       width="100vw"
-      height="100vh"
+      height="90vh"
       display={'flex'}
       justifyContent={'center'}
       flexDirection={'column'}
@@ -114,7 +117,7 @@ export default function Home() {
       <Button variant="contained" onClick={handleOpen}>
         Add New Item/Update Item
       </Button>
-      <Box border={'1px solid #333'}>
+      <Box>
         <Box
           width="800px"
           height="100px"
@@ -122,27 +125,30 @@ export default function Home() {
           display={'flex'}
           justifyContent={'center'}
           alignItems={'center'}
+          borderRadius={2}
         >
-          <Typography variant={'h2'} color={'#333'} textAlign={'center'}>
-            Cindy's Pantry
+          <Typography variant={'h4'} color={'#333'} textAlign={'center'}>
+            Inventory Items
           </Typography>
         </Box>
-        <Stack width="800px" height="300px" spacing={2} overflow={'auto'}>
+
+        <Stack width="800px" height="800px" spacing={2} overflow={'auto'}>
           {items.map(({name, quantity}) => (
             <Box
               key={name}
               width="100%"
-              minHeight="150px"
+              minHeight="80px"
               display={'flex'}
               justifyContent={'space-between'}
               alignItems={'center'}
               bgcolor={'#f0f0f0'}
               paddingX={5}
+              borderRadius={2}
             >
-              <Typography variant={'h3'} color={'#333'} textAlign={'center'}>
+              <Typography variant={'h5'} color={'#333'} textAlign={'center'}>
                 {name.charAt(0).toUpperCase() + name.slice(1)}
               </Typography>
-              <Typography variant={'h3'} color={'#333'} textAlign={'center'}>
+              <Typography variant={'h5'} color={'#333'} textAlign={'center'}>
                 Quantity: {quantity}
               </Typography>
               <Button variant="contained" onClick={() => removeItem(name)}>
@@ -153,5 +159,6 @@ export default function Home() {
         </Stack>
       </Box>
     </Box>
+    </>
   )
 }
