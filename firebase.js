@@ -3,13 +3,14 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
+console.log(process.env.API_KEY)
 const firebaseConfig = {
-  apiKey: "AIzaSyB4GKghpcOqT4Ngu1aOVD1psxYZn1EBETU",
-  authDomain: "cindys-pantry.firebaseapp.com",
-  projectId: "cindys-pantry",
-  storageBucket: "cindys-pantry.appspot.com",
-  messagingSenderId: "1094232030132",
-  appId: "1:1094232030132:web:771b7e8692d813c62e90e1"
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID
 };
 
 // Initialize Firebase
