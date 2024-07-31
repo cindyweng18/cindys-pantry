@@ -7,6 +7,7 @@ import {firestore} from "../firebase";
 import { doc, setDoc, getDoc, getDocs, collection, getFirestore, query, onSnapshot, deleteDoc} from 'firebase/firestore';
 import { Button, Divider, Modal, TextField, Typography } from '@mui/material';
 import Nav from './navbar';
+import Search from './search';
 
 const style = {
   position: 'absolute',
@@ -117,6 +118,7 @@ export default function Home() {
       <Button variant="contained" onClick={handleOpen}>
         Add New Item/Update Item
       </Button>
+      <Search> </Search>
       <Box>
         <Box
           width="800px"
