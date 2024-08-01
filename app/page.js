@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import * as React from 'react';
 import { Box, Button, Divider, IconButton, InputBase, Paper, Stack, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import Nav from './components/navbar';
 import InventoryItem from './components/inventoryitem';
 import AddItemModal from './components/additemmodal';
 import { getItems, addItem, removeItem } from './utils/firebaseutils';
@@ -35,7 +34,7 @@ export default function Home() {
     <>
     <NavBar />
     <Hero />
-      <Box width="100vw" height="90vh" display={'flex'} justifyContent={'center'} flexDirection={'column'} alignItems={'center'} gap={2}>
+      <Box width="100vw" height="70vh" display={'flex'} justifyContent={'center'} flexDirection={'column'} alignItems={'center'} gap={2}>
         <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem} />
         <Stack spacing={2} direction="row">
           <Button variant="contained" onClick={handleOpen}>
