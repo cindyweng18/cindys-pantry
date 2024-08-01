@@ -11,7 +11,7 @@ export default function RootLayout({ children }) {
     <ThemeProvider theme={theme}>
       <html lang="en">
         <head>
-          <title>Cindy's Pantry</title>
+          <title>Cindy&apos;s Pantry</title>
         </head>
         <body className={inter.className}>{children}</body>
       </html>

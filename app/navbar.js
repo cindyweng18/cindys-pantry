@@ -10,7 +10,7 @@ export default function Nav() {
       <AppBar position="static" sx={{ height: '100px' }}>
         <Toolbar>
           <Typography variant="h3" component="h1" sx={{ flexGrow: 1 }} textAlign={'center'} >
-            Cindy's Pantry
+            Cindy&apos;s Pantry
           </Typography>
         </Toolbar>
       </AppBar>
