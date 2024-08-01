@@ -159,7 +159,7 @@ export default function Home() {
           display={'flex'}
           justifyContent={'center'}
           alignItems={'center'}
-          borderRadius={2}
+          borderRadius={4}
         >
           <Typography variant={'h4'} textAlign={'center'}>
             Inventory Items
@@ -177,7 +177,7 @@ export default function Home() {
               alignItems={'center'}
               bgcolor={'#FFF8DB'}
               paddingX={5}
-              borderRadius={2}
+              borderRadius={4}
             >
               <Typography variant={'h5'} color={'#173B45'} textAlign={'center'}>
                 {name.charAt(0).toUpperCase() + name.slice(1)}
