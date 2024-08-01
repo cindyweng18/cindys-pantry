@@ -7,6 +7,8 @@ import Nav from './components/navbar';
 import InventoryItem from './components/inventoryitem';
 import AddItemModal from './components/additemmodal';
 import { getItems, addItem, removeItem } from './utils/firebaseutils';
+import Hero from './components/hero';
+import NavBar from './components/navbar';
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -31,7 +33,8 @@ export default function Home() {
   
   return (
     <>
-      <Nav />
+    <NavBar />
+    <Hero />
       <Box width="100vw" height="90vh" display={'flex'} justifyContent={'center'} flexDirection={'column'} alignItems={'center'} gap={2}>
         <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem} />
         <Stack spacing={2} direction="row">

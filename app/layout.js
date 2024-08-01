@@ -2,13 +2,14 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { theme } from "./theme";
+import theme from "./theme";
 
 const inter = Inter({ subsets: ["latin"] });
+const newTheme = createTheme(theme('light'));
 
 export default function RootLayout({ children }) {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={newTheme}>
       <html lang="en">
         <head>
           <title>Cindy&apos;s Pantry</title>
