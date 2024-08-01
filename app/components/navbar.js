@@ -69,7 +69,7 @@ function NavBar({ mode, toggleColorMode }) {
                 color: (theme) =>
                   theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
               }}>
-                    Cindy's Pantry Tracker
+                    Cindy&apos;s Pantry Tracker
                   </Typography>
                 </MenuItem>
               </Box>
@@ -133,7 +133,7 @@ function NavBar({ mode, toggleColorMode }) {
                     <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
                   </Box>
                   <MenuItem>
-                    Cindy's Pantry Tracker
+                    Cindy&apos;s Pantry Tracker
                   </MenuItem>
                   <Divider />
                   <MenuItem>
