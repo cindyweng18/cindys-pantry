@@ -7,9 +7,9 @@ import Typography from '@mui/material/Typography';
 export default function Nav() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ height: '100px' }}>
         <Toolbar>
-          <Typography variant="h3" component="h1" sx={{ flexGrow: 1 }} textAlign={'center'}>
+          <Typography variant="h3" component="h1" sx={{ flexGrow: 1 }} textAlign={'center'} >
             Cindy's Pantry
           </Typography>
         </Toolbar>

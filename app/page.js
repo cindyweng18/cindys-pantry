@@ -5,7 +5,8 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import {firestore} from "../firebase";
 import { doc, setDoc, getDoc, getDocs, collection, getFirestore, query, onSnapshot, deleteDoc} from 'firebase/firestore';
-import { Button, Divider, Modal, TextField, Typography } from '@mui/material';
+import { Button, Divider, IconButton, InputBase, Modal, Paper, TextField, Typography } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import Nav from './navbar';
 import Search from './search';
 
@@ -27,9 +28,11 @@ const style = {
 export default function Home() {
   const [items, setItems] = useState([])
   const [open, setOpen] = useState(false)
+  const [show, handleShow] = useState(false)
   const [itemName, setItemName] = useState('')
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const [itemFound, setItem] = useState(items)
 
   const getItems = async () => {
     const snapshot = query(collection(firestore, 'pantry'))
@@ -69,6 +72,12 @@ export default function Home() {
       }
     }
     await getItems()
+  }
+
+  const searchItem = (item) => {
+    const found = items.filter((i) => 
+      i.name.toLowerCase().includes(item.toLowerCase()))
+    setItems(found)
   }
   
   return (
@@ -121,7 +130,28 @@ export default function Home() {
         <Button variant="contained" onClick={handleOpen}>
           Add New Item/Update Item
         </Button>
-        <Search> </Search>
+        {/* <Search> </Search> */}
+        <Paper
+          component="form"
+          sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 300 }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Search Item"
+            inputProps={{ 'aria-label': 'search item' }}
+            onChange={(e) => setItemName(e.target.value)}
+          />
+          <IconButton 
+          type="button" 
+          sx={{ p: '10px' }} 
+          aria-label="search"
+          onClick={() => {
+            searchItem(itemName)
+            setItemName('')
+          }}>
+            <SearchIcon />
+          </IconButton>
+        </Paper>
       </Stack>
       <Box>
         <Box
