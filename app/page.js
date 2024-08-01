@@ -8,7 +8,6 @@ import { doc, setDoc, getDoc, getDocs, collection, getFirestore, query, onSnapsh
 import { Button, Divider, IconButton, InputBase, Modal, Paper, TextField, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import Nav from './navbar';
-import Search from './search';
 
 const style = {
   position: 'absolute',
@@ -130,7 +129,6 @@ export default function Home() {
         <Button variant="contained" onClick={handleOpen}>
           Add New Item/Update Item
         </Button>
-        {/* <Search> </Search> */}
         <Paper
           component="form"
           sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 300 }}
@@ -157,7 +155,7 @@ export default function Home() {
         <Box
           width="800px"
           height="100px"
-          bgcolor={'#ADD8E6'}
+          bgcolor={'#FFC7ED'}
           display={'flex'}
           justifyContent={'center'}
           alignItems={'center'}
@@ -177,7 +175,7 @@ export default function Home() {
               display={'flex'}
               justifyContent={'space-between'}
               alignItems={'center'}
-              bgcolor={'#F8EDED'}
+              bgcolor={'#FFF8DB'}
               paddingX={5}
               borderRadius={2}
             >
