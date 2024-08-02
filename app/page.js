@@ -8,6 +8,7 @@ import AddItemModal from './components/additemmodal';
 import { getItems, addItem, removeItem } from './utils/firebaseutils';
 import Hero from './components/hero';
 import NavBar from './components/navbar';
+import Footer from './components/footer';
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -53,8 +54,11 @@ export default function Home() {
           </Paper>
         </Stack>
         <Box>
-          <Box width="800px" height="100px" bgcolor={'#FFC7ED'} display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={4}>
-            <Typography variant={'h4'} textAlign={'center'}>
+          <Box width="800px" height="100px" display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={4}>
+            <Typography variant={'h4'} textAlign={'center'} sx={{
+                color: (theme) =>
+                  theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
+              }}>
               Inventory Items
             </Typography>
           </Box>
@@ -65,6 +69,7 @@ export default function Home() {
           </Stack>
         </Box>
       </Box>
+      <Footer />
     </>
   );
 }
