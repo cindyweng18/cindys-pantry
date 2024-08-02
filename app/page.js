@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import * as React from 'react';
-import { Box, Button, Divider, IconButton, InputBase, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, IconButton, InputBase, Paper, Stack, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import InventoryItem from './components/inventoryitem';
 import AddItemModal from './components/additemmodal';
@@ -54,7 +54,8 @@ export default function Home() {
           </Paper>
         </Stack>
         <Box>
-          <Box width="800px" height="100px" display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={4}>
+          <Box component={Card}
+            variant="outlined" width="800px" height="100px" display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={4}>
             <Typography variant={'h4'} textAlign={'center'} sx={{
                 color: (theme) =>
                   theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',

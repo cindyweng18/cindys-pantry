@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Card, Divider, Typography } from '@mui/material';
 
 const InventoryItem = ({ name, quantity, removeItem }) => (
+    <>
   <Box
     key={name}
     width="100%"
@@ -9,7 +10,7 @@ const InventoryItem = ({ name, quantity, removeItem }) => (
     display={'flex'}
     justifyContent={'space-between'}
     alignItems={'center'}
-    bgcolor={'#FFF8DB'}
+    // bgcolor={'#FFF8DB'}
     paddingX={5}
     borderRadius={4}
   >
@@ -23,6 +24,8 @@ const InventoryItem = ({ name, quantity, removeItem }) => (
       Remove
     </Button>
   </Box>
+  <Divider />
+  </>
 );
 
 export default InventoryItem;
