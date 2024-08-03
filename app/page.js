@@ -37,7 +37,7 @@ export default function Home() {
     <Hero />
       <Box width="100vw" height="70vh" display={'flex'} justifyContent={'center'} flexDirection={'column'} alignItems={'center'} gap={2}>
         <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem} />
-        <Stack spacing={2} direction="row">
+        <Stack spacing={30} direction="row">
           <Button variant="contained" onClick={handleOpen}>
             Add New Item/Update Item
           </Button>
