@@ -9,6 +9,7 @@ import { getItems, addItem, removeItem } from './utils/firebaseutils';
 import Hero from './components/hero';
 import NavBar from './components/navbar';
 import Footer from './components/footer';
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 export default function Home() {
   const [items, setItems] = useState([]);

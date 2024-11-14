@@ -12,6 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './togglecolormode';
+import { SignedOut } from '@clerk/nextjs';
 
 function NavBar({ mode, toggleColorMode }) {
   const [open, setOpen] = useState(false);
@@ -82,12 +83,13 @@ function NavBar({ mode, toggleColorMode }) {
               }}
             >
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
+              <SignedOut>
               <Button
                 color="primary"
                 variant="text"
                 size="small"
                 component="a"
-                href="/material-ui/getting-started/templates/sign-in/"
+                href="/sign-in"
                 target="_blank"
               >
                 Sign in
@@ -97,11 +99,12 @@ function NavBar({ mode, toggleColorMode }) {
                 variant="contained"
                 size="small"
                 component="a"
-                href="/material-ui/getting-started/templates/sign-up/"
+                href="/sign-up"
                 target="_blank"
               >
                 Sign up
               </Button>
+              </SignedOut>
             </Box>
             <Box sx={{ display: { sm: '', md: 'none' } }}>
               <Button
@@ -136,12 +139,13 @@ function NavBar({ mode, toggleColorMode }) {
                     Cindy&apos;s Pantry Tracker
                   </MenuItem>
                   <Divider />
+                  <SignedOut> 
                   <MenuItem>
                     <Button
                       color="primary"
                       variant="contained"
                       component="a"
-                      href="/material-ui/getting-started/templates/sign-up/"
+                      href="/sign-up"
                       target="_blank"
                       sx={{ width: '100%' }}
                     >
@@ -153,13 +157,14 @@ function NavBar({ mode, toggleColorMode }) {
                       color="primary"
                       variant="outlined"
                       component="a"
-                      href="/material-ui/getting-started/templates/sign-in/"
+                      href="/sign-in"
                       target="_blank"
                       sx={{ width: '100%' }}
                     >
                       Sign in
                     </Button>
                   </MenuItem>
+                  </SignedOut>
                 </Box>
               </Drawer>
             </Box>
