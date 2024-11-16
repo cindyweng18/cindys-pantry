@@ -1,5 +1,17 @@
 import { SignUp } from '@clerk/nextjs'
+import { Grid } from '@mui/material'
 
 export default function Page() {
-  return <SignUp />
+  return(
+    <Grid
+    container
+    spacing={0}
+    direction="column"
+    alignItems="center"
+    justifyContent="center"
+    sx={{ minHeight: '100vh' }}
+  >
+    <SignUp />
+  </Grid>
+  ) 
 }
