@@ -30,13 +30,22 @@ export default function Home() {
     const found = items.filter((i) => i.name.toLowerCase().includes(item.toLowerCase()));
     setItems(found);
   };
+
+  const handleAddItem = async (itemName) => {
+    await addItem(itemName);
+    const updatedItems = await getItems();
+    setItems(updatedItems);
+    setItemName('');
+    handleClose();
+  };
+
   
   return (
     <>
     <NavBar />
     <Hero />
       <Box width="100vw" height="70vh" display={'flex'} justifyContent={'center'} flexDirection={'column'} alignItems={'center'} gap={2}>
-        <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem} />
+        <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={handleAddItem}/>
         <Stack spacing={30} direction="row">
           <Button variant="contained" onClick={handleOpen}>
             Add New Item/Update Item

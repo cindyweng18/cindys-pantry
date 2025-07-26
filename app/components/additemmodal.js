@@ -31,7 +31,7 @@ const AddItemModal = ({ open, handleClose, itemName, setItemName, addItem }) => 
           value={itemName}
           onChange={(e) => setItemName(e.target.value)}
         />
-        <Button variant="outlined" onClick={() => { addItem(itemName); setItemName(''); handleClose(); }}>
+        <Button variant="outlined" onClick={async () => {await addItem(itemName);}}>
           Add
         </Button>
       </Stack>
