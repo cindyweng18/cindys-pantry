@@ -9,22 +9,27 @@ import { getItems, addItem, removeItem } from './utils/firebaseutils';
 import Hero from './components/hero';
 import NavBar from './components/navbar';
 import Footer from './components/footer';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Home() {
   const [items, setItems] = useState([]);
   const [open, setOpen] = useState(false);
   const [itemName, setItemName] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   
   useEffect(() => {
     const fetchItems = async () => {
+      setLoading(true);
       const inventoryList = await getItems();
       setItems(inventoryList);
+      setLoading(false);
     };
     fetchItems();
   }, []);
+
 
   const searchItem = (item) => {
     const found = items.filter((i) => i.name.toLowerCase().includes(item.toLowerCase()));
@@ -72,11 +77,17 @@ export default function Home() {
               Inventory Items
             </Typography>
           </Box>
-          <Stack width="800px" height="500px" spacing={2} overflow={'auto'}>
-            {items.map(({ name, quantity }) => (
-              <InventoryItem key={name} name={name} quantity={quantity} removeItem={removeItem} />
-            ))}
-          </Stack>
+          {loading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Stack width="800px" height="500px" spacing={2} overflow={'auto'}>
+              {items.map(({ name, quantity }) => (
+                <InventoryItem key={name} name={name} quantity={quantity} removeItem={removeItem} />
+              ))}
+            </Stack>
+          )}
         </Box>
       </Box>
       <Footer />
