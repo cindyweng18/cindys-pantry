@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Modal, Stack, TextField, Typography } from '@mui/material';
+import {Box, Button, Modal, Stack, TextField, Typography, CircularProgress} from '@mui/material';
 
 const style = {
   position: 'absolute',
@@ -16,23 +16,28 @@ const style = {
   gap: 3,
 };
 
-const AddItemModal = ({ open, handleClose, itemName, setItemName, addItem }) => (
+const AddItemModal = ({open, handleClose, itemName, setItemName, addItem, loading}) => (
   <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
     <Box sx={style}>
       <Typography id="modal-modal-title" variant="h6" component="h2">
         Add Item
       </Typography>
-      <Stack width="105%" direction={'row'} spacing={2}>
+      <Stack width="105%" direction="row" spacing={2}>
         <TextField
-          id="outlined-basic"
           label="Item"
           variant="outlined"
           fullWidth
           value={itemName}
           onChange={(e) => setItemName(e.target.value)}
-        />
-        <Button variant="outlined" onClick={async () => {await addItem(itemName);}}>
-          Add
+          disabled={loading} />
+        <Button
+          variant="outlined"
+          onClick={async () => {
+            await addItem(itemName);
+          }}
+          disabled={loading || !itemName.trim()}
+        >
+          {loading ? <CircularProgress size={20} /> : 'Add'}
         </Button>
       </Stack>
     </Box>

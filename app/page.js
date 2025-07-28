@@ -16,6 +16,7 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const [itemName, setItemName] = useState('');
   const [loading, setLoading] = useState(true);
+  const [addLoading, setAddLoading] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -36,13 +37,21 @@ export default function Home() {
     setItems(found);
   };
 
-  const handleAddItem = async (itemName) => {
-    await addItem(itemName);
-    const updatedItems = await getItems();
-    setItems(updatedItems);
-    setItemName('');
-    handleClose();
+  const handleAddItem = async (name) => {
+    try {
+      setAddLoading(true);
+      await addItem(name);
+      const updatedItems = await getItems();
+      setItems(updatedItems);
+      setItemName('');
+      handleClose();
+    } catch (err) {
+      console.error("Failed to add item:", err);
+    } finally {
+      setAddLoading(false);
+    }
   };
+
 
   
   return (
@@ -50,7 +59,7 @@ export default function Home() {
     <NavBar />
     <Hero />
       <Box width="100vw" height="70vh" display={'flex'} justifyContent={'center'} flexDirection={'column'} alignItems={'center'} gap={2}>
-        <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={handleAddItem}/>
+        <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={handleAddItem} loading={addLoading}/>
         <Stack spacing={30} direction="row">
           <Button variant="contained" onClick={handleOpen}>
             Add New Item/Update Item
