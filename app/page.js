@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import * as React from 'react';
-import { Box, Button, Card, Divider, IconButton, InputBase, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, IconButton, InputBase, Paper, Stack, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import InventoryItem from './components/inventoryitem';
 import AddItemModal from './components/additemmodal';
@@ -10,6 +10,7 @@ import Hero from './components/hero';
 import NavBar from './components/navbar';
 import Footer from './components/footer';
 import CircularProgress from '@mui/material/CircularProgress';
+import { fetchRecipesFromPantry } from './utils/spoonacular';
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -17,6 +18,8 @@ export default function Home() {
   const [itemName, setItemName] = useState('');
   const [loading, setLoading] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
+  const [recipes, setRecipes] = useState([]);
+  const [recipeLoading, setRecipeLoading] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -52,6 +55,18 @@ export default function Home() {
     }
   };
 
+  const handleFindRecipes = async () => {
+    setRecipeLoading(true);
+    try {
+      const ingredientNames = items.map(item => item.name);
+      const data = await fetchRecipesFromPantry(ingredientNames);
+      setRecipes(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setRecipeLoading(false);
+    }
+  };
 
   
   return (
