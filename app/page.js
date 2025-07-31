@@ -10,7 +10,7 @@ import Hero from './components/hero';
 import NavBar from './components/navbar';
 import Footer from './components/footer';
 import CircularProgress from '@mui/material/CircularProgress';
-import { fetchRecipesFromPantry } from './utils/spoonacular';
+import RecipeGenerator from './components/recipegenerator';
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -18,21 +18,45 @@ export default function Home() {
   const [itemName, setItemName] = useState('');
   const [loading, setLoading] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
-  const [recipes, setRecipes] = useState([]);
-  const [recipeLoading, setRecipeLoading] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   
   useEffect(() => {
+    let isMounted = true;
+    const timeout = setTimeout(() => {
+      if (isMounted) {
+        setError("Request timed out. Please try again later.");
+        setLoading(false);
+      }
+    }, 8000); 
+
     const fetchItems = async () => {
-      setLoading(true);
-      const inventoryList = await getItems();
-      setItems(inventoryList);
-      setLoading(false);
+      try {
+        const inventoryList = await getItems();
+        if (isMounted) {
+          setItems(inventoryList);
+          setLoading(false);
+          clearTimeout(timeout);
+        }
+      } catch (err) {
+        if (isMounted) {
+          console.error("Error fetching items:", err);
+          setError("Failed to load pantry items.");
+          setLoading(false);
+          clearTimeout(timeout);
+        }
+      }
     };
+
     fetchItems();
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeout);
+    };
   }, []);
+
 
 
   const searchItem = (item) => {
@@ -52,19 +76,6 @@ export default function Home() {
       console.error("Failed to add item:", err);
     } finally {
       setAddLoading(false);
-    }
-  };
-
-  const handleFindRecipes = async () => {
-    setRecipeLoading(true);
-    try {
-      const ingredientNames = items.map(item => item.name);
-      const data = await fetchRecipesFromPantry(ingredientNames);
-      setRecipes(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setRecipeLoading(false);
     }
   };
 
@@ -105,7 +116,9 @@ export default function Home() {
             <Box display="flex" justifyContent="center" alignItems="center" height="300px">
               <CircularProgress />
             </Box>
-          ) : (
+            ) : error ? (
+              <div className="text-red-600 text-center">{error}</div>
+            ) : (
             <Stack width="800px" height="500px" spacing={2} overflow={'auto'}>
               {items.map(({ name, quantity }) => (
                 <InventoryItem key={name} name={name} quantity={quantity} removeItem={removeItem} />
@@ -114,6 +127,7 @@ export default function Home() {
           )}
         </Box>
       </Box>
+      <RecipeGenerator pantryItems={items} />
       <Footer />
     </>
   );
