@@ -11,3 +11,8 @@ export async function fetchRecipesFromPantry(ingredients = []) {
 
   return await response.json();
 }
+
+export const getIngredientList = (items) => {
+  return items.map(item => item.name).join(',');
+};
+
