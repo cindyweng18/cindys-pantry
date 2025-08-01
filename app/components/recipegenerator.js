@@ -1,5 +1,16 @@
 'use client';
+
 import { useState } from 'react';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  CircularProgress,
+  Grid,
+  Typography,
+} from '@mui/material';
 
 export default function RecipeGenerator({ pantryItems }) {
   const [recipes, setRecipes] = useState([]);
@@ -12,7 +23,9 @@ export default function RecipeGenerator({ pantryItems }) {
 
     try {
       const ingredients = pantryItems.map(i => i.name).join(',');
-      const res = await fetch(`https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=5&ranking=2&ignorePantry=true&apiKey=${process.env.NEXT_PUBLIC_RECIPE_API_KEY}`);
+      const res = await fetch(
+        `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredients}&number=5&ranking=2&ignorePantry=true&apiKey=${process.env.NEXT_PUBLIC_RECIPE_API_KEY}`
+      );
       const data = await res.json();
 
       if (!res.ok) throw new Error('Failed to fetch recipes');
@@ -25,29 +38,65 @@ export default function RecipeGenerator({ pantryItems }) {
   };
 
   return (
-    <div className="w-full px-4 py-8 max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">🍽️ Recipes You Can Make</h2>
-      <button
-        onClick={fetchRecipes}
-        className="mb-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+    <Box px={2} py={4} maxWidth="lg" mx="auto">
+      <Box
+        component={Card}
+        variant="outlined"
+        width="100%"
+        height="60px"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        borderRadius={2}
       >
+        <Typography
+          variant="h5"
+          sx={{
+            color: (theme) =>
+              theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
+          }}
+        >
+          Recipes You Can Make
+        </Typography>
+      </Box>
+      <Button variant="contained" onClick={fetchRecipes} sx={{ mb: 3 }}>
         Generate Recipes
-      </button>
+      </Button>
 
-      {loading && <p className="text-blue-500">Loading recipes...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+      {loading && (
+        <Box display="flex" justifyContent="center" mt={2}>
+          <CircularProgress />
+        </Box>
+      )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {error && (
+        <Typography color="error" textAlign="center" mt={2}>
+          {error}
+        </Typography>
+      )}
+
+      <Grid container spacing={2}>
         {recipes.map(recipe => (
-          <div key={recipe.id} className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-            <img src={recipe.image} alt={recipe.title} className="w-full rounded mb-2" />
-            <h3 className="font-semibold text-lg text-gray-800 dark:text-white">{recipe.title}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              Used Ingredients: {recipe.usedIngredientCount}, Missing: {recipe.missedIngredientCount}
-            </p>
-          </div>
+          <Grid item xs={12} sm={6} md={4} key={recipe.id}>
+            <Card>
+              <CardMedia
+                component="img"
+                image={recipe.image}
+                alt={recipe.title}
+                sx={{ height: 140 }}
+              />
+              <CardContent>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {recipe.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Used Ingredients: {recipe.usedIngredientCount}, Missing: {recipe.missedIngredientCount}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Box>
   );
 }

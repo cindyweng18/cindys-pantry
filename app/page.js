@@ -18,10 +18,11 @@ export default function Home() {
   const [itemName, setItemName] = useState('');
   const [loading, setLoading] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
   useEffect(() => {
     let isMounted = true;
     const timeout = setTimeout(() => {
@@ -29,7 +30,7 @@ export default function Home() {
         setError("Request timed out. Please try again later.");
         setLoading(false);
       }
-    }, 8000); 
+    }, 8000);
 
     const fetchItems = async () => {
       try {
@@ -57,8 +58,6 @@ export default function Home() {
     };
   }, []);
 
-
-
   const searchItem = (item) => {
     const found = items.filter((i) => i.name.toLowerCase().includes(item.toLowerCase()));
     setItems(found);
@@ -79,55 +78,88 @@ export default function Home() {
     }
   };
 
-  
   return (
     <>
-    <NavBar />
-    <Hero />
-      <Box width="100vw" height="70vh" display={'flex'} justifyContent={'center'} flexDirection={'column'} alignItems={'center'} gap={2}>
-        <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={handleAddItem} loading={addLoading}/>
-        <Stack spacing={30} direction="row">
-          <Button variant="contained" onClick={handleOpen}>
-            Add New Item/Update Item
-          </Button>
-          <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 300 }}>
-            <InputBase
-              sx={{ ml: 1, flex: 1 }}
-              placeholder="Search Item"
-              inputProps={{ 'aria-label': 'search item' }}
-              onChange={(e) => setItemName(e.target.value)}
-            />
-            <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={() => { searchItem(itemName); setItemName(''); }}>
-              <SearchIcon />
-            </IconButton>
-          </Paper>
-        </Stack>
-        <Box>
-          <Box component={Card}
-            variant="outlined" width="800px" height="100px" display={'flex'} justifyContent={'center'} alignItems={'center'} borderRadius={4}>
-            <Typography variant={'h4'} textAlign={'center'} sx={{
-                color: (theme) =>
-                  theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
-              }}>
-              Inventory Items
-            </Typography>
-          </Box>
-          {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center" height="300px">
-              <CircularProgress />
+      <NavBar />
+      <Hero />
+      <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} p={4} gap={4}>
+        <Box flex={1}>
+          <Box
+              component={Card}
+              variant="outlined"
+              width="100%"
+              height="60px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              borderRadius={2}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  color: (theme) =>
+                    theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
+                }}
+              >
+                Inventory Items
+              </Typography>
             </Box>
+          <AddItemModal
+            open={open}
+            handleClose={handleClose}
+            itemName={itemName}
+            setItemName={setItemName}
+            addItem={handleAddItem}
+            loading={addLoading}
+          />
+          <Stack spacing={2} direction="row">
+            <Button variant="contained" onClick={handleOpen}>
+              Add New Item/Update Item
+            </Button>
+            <Paper
+              component="form"
+              sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 300 }}
+            >
+              <InputBase
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="Search Item"
+                inputProps={{ 'aria-label': 'search item' }}
+                onChange={(e) => setItemName(e.target.value)}
+              />
+              <IconButton
+                type="button"
+                sx={{ p: '10px' }}
+                aria-label="search"
+                onClick={() => {
+                  searchItem(itemName);
+                  setItemName('');
+                }}
+              >
+                <SearchIcon />
+              </IconButton>
+            </Paper>
+          </Stack>
+          <Box mt={4}>
+            {loading ? (
+              <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+                <CircularProgress />
+              </Box>
             ) : error ? (
-              <div className="text-red-600 text-center">{error}</div>
+              <Typography color="error" textAlign="center">{error}</Typography>
             ) : (
-            <Stack width="800px" height="500px" spacing={2} overflow={'auto'}>
-              {items.map(({ name, quantity }) => (
-                <InventoryItem key={name} name={name} quantity={quantity} removeItem={removeItem} />
-              ))}
-            </Stack>
-          )}
+              <Stack spacing={2} mt={2} height="400px" overflow="auto">
+                {items.map(({ name, quantity }) => (
+                  <InventoryItem key={name} name={name} quantity={quantity} removeItem={removeItem} />
+                ))}
+              </Stack>
+            )}
+          </Box>
+        </Box>
+
+        <Box flex={1}>
+          <RecipeGenerator pantryItems={items} />
         </Box>
       </Box>
-      <RecipeGenerator pantryItems={items} />
       <Footer />
     </>
   );
