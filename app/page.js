@@ -149,7 +149,7 @@ export default function Home() {
             ) : (
               <Stack spacing={2} mt={2} height="400px" overflow="auto">
                 {items.map(({ name, quantity }) => (
-                  <InventoryItem key={name} name={name} quantity={quantity} removeItem={removeItem} />
+                  <InventoryItem key={name} name={name} quantity={quantity} removeItem={removeItem()} />
                 ))}
               </Stack>
             )}
