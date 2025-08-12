@@ -1,5 +1,14 @@
 import { firestore } from '@/firebase';
-import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, onSnapshot } from 'firebase/firestore';
+
+export const listenToItems = (callback) => {
+  const colRef = collection(firestore, "pantry");
+  return onSnapshot(colRef, (snap) => {
+    const list = snap.docs.map((d) => ({ name: d.id, ...(d.data() || {}) }));
+    callback(list);
+  });
+};
+
 
 export const getItems = async () => {
   const snapshot = query(collection(firestore, 'pantry'));
