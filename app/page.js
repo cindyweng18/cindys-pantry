@@ -1,12 +1,11 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import * as React from 'react';
-import {Box, Button, Card, CircularProgress, Typography,Stack, Paper, IconButton, InputBase } from '@mui/material';
+import { Box, Button, Card, CircularProgress, Typography, Stack, Paper, IconButton, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import InventoryItem from './components/inventoryitem';
 import AddItemModal from './components/additemmodal';
-import { getItems, addItem, removeItem, listenToItems } from './utils/firebaseutils';
+import { addItem, removeItem, listenToItems } from './utils/firebaseutils';
 import Hero from './components/hero';
 import NavBar from './components/navbar';
 import Footer from './components/footer';
@@ -15,8 +14,9 @@ import RecipeGenerator from './components/recipegenerator';
 export default function Home() {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [newItemName, setNewItemName] = useState(''); 
+  const [searchTerm, setSearchTerm] = useState('');   
   const [open, setOpen] = useState(false);
-  const [itemName, setItemName] = useState('');
   const [loading, setLoading] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -36,7 +36,7 @@ export default function Home() {
     const unsubscribe = listenToItems((list) => {
       if (!isMounted) return;
       setItems(list);
-      if (!itemName) setFilteredItems(list);
+      if (!searchTerm) setFilteredItems(list);
       setLoading(false);
       setError(null);
       clearTimeout(timeout);
@@ -58,7 +58,7 @@ export default function Home() {
     try {
       setAddLoading(true);
       await addItem(name);
-      setItemName('');
+      setNewItemName('');
       handleClose();
     } catch (err) {
       console.error('Failed to add item:', err);
@@ -71,33 +71,36 @@ export default function Home() {
     <>
       <NavBar />
       <Hero />
+
       <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} p={4} gap={4}>
         <Box flex={1}>
           <AddItemModal
             open={open}
             handleClose={handleClose}
-            itemName={itemName}
-            setItemName={setItemName}
+            itemName={newItemName}          
+            setItemName={setNewItemName}    
             addItem={handleAddItem}
             loading={addLoading}
           />
+
           <Stack spacing={2} direction="row">
             <Button variant="contained" onClick={handleOpen}>
               Add New Item/Update Item
             </Button>
+
             <Paper
               component="form"
-              onSubmit={(e) => { e.preventDefault(); searchItem(itemName); }}
+              onSubmit={(e) => { e.preventDefault(); searchItem(searchTerm); }}
               sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 300 }}
             >
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Search Item"
                 inputProps={{ 'aria-label': 'search item' }}
-                value={itemName}
+                value={searchTerm}
                 onChange={(e) => {
                   const v = e.target.value;
-                  setItemName(v);
+                  setSearchTerm(v);
                   if (!v) setFilteredItems(items);
                 }}
               />
@@ -106,6 +109,7 @@ export default function Home() {
               </IconButton>
             </Paper>
           </Stack>
+
           <Box mt={4}>
             <Card
               variant="outlined"
@@ -121,6 +125,7 @@ export default function Home() {
                 Inventory Items
               </Typography>
             </Card>
+
             {loading ? (
               <Box display="flex" justifyContent="center" alignItems="center" height="300px">
                 <CircularProgress />
@@ -144,6 +149,7 @@ export default function Home() {
           </Card>
         </Box>
       </Box>
+
       <Footer />
     </>
   );
