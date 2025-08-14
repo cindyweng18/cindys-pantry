@@ -1,37 +1,16 @@
 'use client';
-
 import { useState } from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  CircularProgress,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-  Typography,
-  Link as MUILink,
-} from '@mui/material';
+import {Box, Button, Card,CardActionArea,CardContent,CardMedia,CircularProgress,Dialog,DialogTitle,DialogContent,DialogActions,Grid,List,ListItem,ListItemText,Stack,Typography,Link as MUILink,Chip,Alert} from '@mui/material';
 
 export default function RecipeGenerator({ pantryItems }) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const [modalOpen, setModalOpen] = useState(false);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState(null);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
-
+  const [matchInfo, setMatchInfo] = useState({ used: [], missed: [] });
   const apiKey = process.env.NEXT_PUBLIC_RECIPE_API_KEY;
 
   const fetchRecipes = async () => {
@@ -54,13 +33,18 @@ export default function RecipeGenerator({ pantryItems }) {
     }
   };
 
-  const handleOpenRecipe = async (recipeId) => {
+  const handleOpenRecipe = async (recipeLite) => {
     setModalOpen(true);
     setDetailsLoading(true);
     setDetailsError(null);
+    setMatchInfo({
+      used: recipeLite.usedIngredients || [],
+      missed: recipeLite.missedIngredients || [],
+    });
+
     try {
       const res = await fetch(
-        `https://api.spoonacular.com/recipes/${recipeId}/information?includeNutrition=false&apiKey=${apiKey}`
+        `https://api.spoonacular.com/recipes/${recipeLite.id}/information?includeNutrition=false&apiKey=${apiKey}`
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Failed to fetch recipe details');
@@ -76,6 +60,7 @@ export default function RecipeGenerator({ pantryItems }) {
     setModalOpen(false);
     setSelectedRecipe(null);
     setDetailsError(null);
+    setMatchInfo({ used: [], missed: [] });
   };
 
   const summaryText = (html) => (html ? html.replace(/<[^>]+>/g, '') : '');
@@ -111,7 +96,7 @@ export default function RecipeGenerator({ pantryItems }) {
         {recipes.map((recipe) => (
           <Grid item xs={12} sm={6} md={4} key={recipe.id}>
             <Card variant="outlined">
-              <CardActionArea onClick={() => handleOpenRecipe(recipe.id)}>
+              <CardActionArea onClick={() => handleOpenRecipe(recipe)}>
                 <CardMedia component="img" image={recipe.image} alt={recipe.title} sx={{ height: 160 }} />
                 <CardContent>
                   <Typography variant="subtitle1" fontWeight={600} gutterBottom>
@@ -150,7 +135,7 @@ export default function RecipeGenerator({ pantryItems }) {
                   <Typography variant="body1">Ready in: {selectedRecipe.readyInMinutes} minutes</Typography>
                   {selectedRecipe.sourceUrl && (
                     <Typography variant="body2">
-                      Source: {' '}
+                      Source:{' '}
                       <MUILink href={selectedRecipe.sourceUrl} target="_blank" rel="noopener">
                         {selectedRecipe.sourceName || 'View original'}
                       </MUILink>
@@ -162,6 +147,36 @@ export default function RecipeGenerator({ pantryItems }) {
                     </Typography>
                   )}
                 </Stack>
+              </Box>
+
+              {/* Pantry match summary */}
+              <Box mb={2}>
+                <Typography variant="h6" gutterBottom>
+                  Pantry Match
+                </Typography>
+                {matchInfo.missed.length ? (
+                  <Alert severity="warning" sx={{ mb: 1 }}>
+                    You're missing {matchInfo.missed.length} ingredient{matchInfo.missed.length > 1 ? 's' : ''}.
+                  </Alert>
+                ) : (
+                  <Alert severity="success" sx={{ mb: 1 }}>
+                    You have everything needed for this recipe!
+                  </Alert>
+                )}
+                {!!matchInfo.used.length && (
+                  <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                    {matchInfo.used.map((ing) => (
+                      <Chip key={`used-${ing.id || ing.name}`} label={ing.name || ing.originalName || ing.original} color="success" variant="outlined" size="small" />
+                    ))}
+                  </Stack>
+                )}
+                {!!matchInfo.missed.length && (
+                  <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap mt={1}>
+                    {matchInfo.missed.map((ing) => (
+                      <Chip key={`missed-${ing.id || ing.name}`} label={ing.name || ing.originalName || ing.original} color="warning" variant="filled" size="small" />
+                    ))}
+                  </Stack>
+                )}
               </Box>
 
               <Typography variant="h6" gutterBottom>
