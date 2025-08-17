@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import * as React from 'react';
-import { Box, Button, Card, CircularProgress, Typography, Stack, Paper, IconButton, InputBase, Alert, Collapse } from '@mui/material';
+import {Box, Button, Card, CircularProgress, Typography, Stack, Paper, IconButton, InputBase, Alert, Collapse} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import InventoryItem from './components/inventoryitem';
 import AddItemModal from './components/additemmodal';
@@ -12,10 +12,11 @@ import Footer from './components/footer';
 import RecipeGenerator from './components/recipegenerator';
 
 export default function Home() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState([]);           
   const [filteredItems, setFilteredItems] = useState([]);
   const [open, setOpen] = useState(false);
-  const [itemName, setItemName] = useState(''); 
+  const [searchTerm, setSearchTerm] = useState('');   
+  const [newItemName, setNewItemName] = useState('');
   const [loading, setLoading] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +36,7 @@ export default function Home() {
     const unsubscribe = listenToItems((list) => {
       if (!isMounted) return;
       setItems(list);
-      if (!itemName) setFilteredItems(list);
+      if (!searchTerm) setFilteredItems(list);
       setLoading(false);
       setError(null);
       clearTimeout(timeout);
@@ -64,7 +65,7 @@ export default function Home() {
     try {
       setAddLoading(true);
       await addItem(name);
-      setItemName('');
+      setNewItemName('');    
       setNoResultsTerm('');
       handleClose();
     } catch (err) {
@@ -83,35 +84,35 @@ export default function Home() {
           <AddItemModal
             open={open}
             handleClose={handleClose}
-            itemName={noResultsTerm || ''}
-            setItemName={(v) => {
-              if (typeof v === 'string') {
-                setItemName(v);
-              } else if (v?.target?.value !== undefined) {
-                setItemName(v.target.value);
-              }
-            }}
+            itemName={newItemName}
+            setItemName={setNewItemName}
             addItem={handleAddItem}
-            loading={addLoading}
-          />
-
+            loading={addLoading} />
           <Stack spacing={2} direction="row">
-            <Button variant="contained" onClick={() => { setNoResultsTerm(''); handleOpen(); }}>
+            <Button variant="contained"
+              onClick={() => {
+                setNoResultsTerm('');
+                setNewItemName('');
+                handleOpen();
+              }}>
               Add New Item/Update Item
             </Button>
             <Paper
               component="form"
-              onSubmit={(e) => { e.preventDefault(); searchItem(itemName); }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                searchItem(searchTerm);
+              }}
               sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 300 }}
             >
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Search Item"
                 inputProps={{ 'aria-label': 'search item' }}
-                value={itemName}
+                value={searchTerm}
                 onChange={(e) => {
                   const v = e.target.value;
-                  setItemName(v);
+                  setSearchTerm(v);
                   if (!v) {
                     setFilteredItems(items);
                     setNoResultsTerm('');
@@ -133,6 +134,7 @@ export default function Home() {
                     size="small"
                     variant="contained"
                     onClick={() => {
+                      setNewItemName(noResultsTerm); 
                       handleOpen();
                     }}
                   >
@@ -142,7 +144,7 @@ export default function Home() {
                     size="small"
                     onClick={() => {
                       setNoResultsTerm('');
-                      setItemName('');
+                      setSearchTerm('');
                       setFilteredItems(items);
                     }}
                   >
@@ -158,7 +160,14 @@ export default function Home() {
           <Box mt={4}>
             <Card
               variant="outlined"
-              sx={{ width: '100%', height: 60, display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: 2 }}
+              sx={{
+                width: '100%',
+                height: 60,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 2,
+              }}
             >
               <Typography
                 variant="h5"
@@ -170,25 +179,34 @@ export default function Home() {
                 Inventory Items
               </Typography>
             </Card>
+
             {loading ? (
               <Box display="flex" justifyContent="center" alignItems="center" height="300px">
                 <CircularProgress />
               </Box>
             ) : error ? (
-              <Typography color="error" textAlign="center">{error}</Typography>
+              <Typography color="error" textAlign="center">
+                {error}
+              </Typography>
             ) : (
               <Stack spacing={2} mt={2} height="400px" overflow="auto">
                 {filteredItems.map(({ name, quantity }) => (
-                  <InventoryItem key={name} name={name} quantity={quantity} removeItem={removeItem} />
+                  <InventoryItem
+                    key={name}
+                    name={name}
+                    quantity={quantity}
+                    removeItem={removeItem}
+                  />
                 ))}
               </Stack>
             )}
           </Box>
         </Box>
-
         <Box flex={1}>
           <Card variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="h5" mb={2}>🍽️ Recipes You Can Make</Typography>
+            <Typography variant="h5" mb={2}>
+              🍽️ Recipes You Can Make
+            </Typography>
             <RecipeGenerator pantryItems={items} />
           </Card>
         </Box>
