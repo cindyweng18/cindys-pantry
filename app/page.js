@@ -65,7 +65,8 @@ export default function Home() {
     try {
       setAddLoading(true);
       await addItem(name);
-      setNewItemName('');    
+      setNewItemName('');
+      setSearchTerm('');  
       setNoResultsTerm('');
       handleClose();
     } catch (err) {
