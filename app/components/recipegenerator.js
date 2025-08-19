@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import {Box, Button, Card,CardActionArea,CardContent,CardMedia,CircularProgress,Dialog,DialogTitle,DialogContent,DialogActions,Grid,List,ListItem,ListItemText,Stack,Typography,Link as MUILink,Chip,Alert} from '@mui/material';
+import {Box, Button, Card, CardActionArea, CardContent, CardMedia, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Grid, List, ListItem, ListItemText, Stack, Typography, Link as MUILink, Chip, Alert, Pagination } from '@mui/material';
 
 export default function RecipeGenerator({ pantryItems }) {
   const [recipes, setRecipes] = useState([]);
@@ -11,6 +11,9 @@ export default function RecipeGenerator({ pantryItems }) {
   const [detailsError, setDetailsError] = useState(null);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [matchInfo, setMatchInfo] = useState({ used: [], missed: [] });
+  const [page, setPage] = useState(1);
+  const pageSize = 6; 
+
   const apiKey = process.env.NEXT_PUBLIC_RECIPE_API_KEY;
 
   const fetchRecipes = async () => {
@@ -21,11 +24,12 @@ export default function RecipeGenerator({ pantryItems }) {
       const res = await fetch(
         `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodeURIComponent(
           ingredients
-        )}&number=9&ranking=2&ignorePantry=true&apiKey=${apiKey}`
+        )}&number=36&ranking=2&ignorePantry=true&apiKey=${apiKey}`
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || 'Failed to fetch recipes');
       setRecipes(data);
+      setPage(1);
     } catch (err) {
       setError(err.message || 'Something went wrong');
     } finally {
@@ -64,6 +68,9 @@ export default function RecipeGenerator({ pantryItems }) {
   };
 
   const summaryText = (html) => (html ? html.replace(/<[^>]+>/g, '') : '');
+  const pageCount = Math.max(1, Math.ceil(recipes.length / pageSize));
+  const start = (page - 1) * pageSize;
+  const currentRecipes = recipes.slice(start, start + pageSize);
 
   return (
     <Box>
@@ -91,9 +98,8 @@ export default function RecipeGenerator({ pantryItems }) {
           <CircularProgress />
         </Box>
       )}
-
       <Grid container spacing={2}>
-        {recipes.map((recipe) => (
+        {currentRecipes.map((recipe) => (
           <Grid item xs={12} sm={6} md={4} key={recipe.id}>
             <Card variant="outlined">
               <CardActionArea onClick={() => handleOpenRecipe(recipe)}>
@@ -111,7 +117,18 @@ export default function RecipeGenerator({ pantryItems }) {
           </Grid>
         ))}
       </Grid>
-
+      {recipes.length > pageSize && (
+        <Stack direction="row" justifyContent="center" mt={2}>
+          <Pagination
+            count={pageCount}
+            page={page}
+            onChange={(_, value) => setPage(value)}
+            shape="rounded"
+            siblingCount={0}
+            boundaryCount={1}
+          />
+        </Stack>
+      )}
       <Dialog open={modalOpen} onClose={handleCloseModal} fullWidth maxWidth="md">
         <DialogTitle>{selectedRecipe?.title || 'Recipe Details'}</DialogTitle>
         <DialogContent dividers>
@@ -166,14 +183,26 @@ export default function RecipeGenerator({ pantryItems }) {
                 {!!matchInfo.used.length && (
                   <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                     {matchInfo.used.map((ing) => (
-                      <Chip key={`used-${ing.id || ing.name}`} label={ing.name || ing.originalName || ing.original} color="success" variant="outlined" size="small" />
+                      <Chip
+                        key={`used-${ing.id || ing.name}`}
+                        label={ing.name || ing.originalName || ing.original}
+                        color="success"
+                        variant="outlined"
+                        size="small"
+                      />
                     ))}
                   </Stack>
                 )}
                 {!!matchInfo.missed.length && (
                   <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap mt={1}>
                     {matchInfo.missed.map((ing) => (
-                      <Chip key={`missed-${ing.id || ing.name}`} label={ing.name || ing.originalName || ing.original} color="warning" variant="filled" size="small" />
+                      <Chip
+                        key={`missed-${ing.id || ing.name}`}
+                        label={ing.name || ing.originalName || ing.original}
+                        color="warning"
+                        variant="filled"
+                        size="small"
+                      />
                     ))}
                   </Stack>
                 )}
