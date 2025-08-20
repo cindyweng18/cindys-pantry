@@ -23,11 +23,6 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Future Improvements
-1. Create user auth
-2. Use AI to generate recipes based on pantry items
-3. Use image classification 
-
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
